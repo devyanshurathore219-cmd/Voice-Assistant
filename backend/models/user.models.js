@@ -1,36 +1,66 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
-
     password: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-
     assistantName: {
-        type: String
+      type: String,
     },
-
     assistantImage: {
-        type: String
+      type: String,
     },
+    history: [{ type: String }],
+  },
+  { timestamps: true },
+);
 
-    history: [
-        { type: String }
-    ]
+const UserModel = mongoose.model("User", userSchema);
+const memoryUsers = [];
 
-}, { timestamps: true })
+const isDatabaseConnected = () => mongoose.connection.readyState === 1;
 
-const User = mongoose.model("User", userSchema)
+const findOne = async (query = {}) => {
+  if (!isDatabaseConnected()) {
+    return (
+      memoryUsers.find((user) =>
+        Object.entries(query).every(([key, value]) => user[key] === value),
+      ) || null
+    );
+  }
 
-export default User
+  return UserModel.findOne(query);
+};
+
+const create = async (data) => {
+  if (!isDatabaseConnected()) {
+    const user = {
+      ...data,
+      _id: new mongoose.Types.ObjectId().toString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    memoryUsers.push(user);
+    return user;
+  }
+
+  return UserModel.create(data);
+};
+
+const User = {
+  findOne,
+  create,
+};
+
+export default User;

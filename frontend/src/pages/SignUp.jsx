@@ -13,9 +13,15 @@ function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+    // Clear previous error
+    setErr("");
+    setLoading(true);
 
     try {
       let result = await axios.post(
@@ -31,8 +37,14 @@ function SignUp() {
       );
 
       console.log(result);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
+
+      setErr(
+        error?.response?.data?.message || "Something went wrong"
+      );
     }
   };
 
@@ -95,11 +107,19 @@ function SignUp() {
           )}
         </div>
 
+        {/* Error Message */}
+        {err.length > 0 && (
+          <p className="text-red-500 text-[17px]">
+            *{err}
+          </p>
+        )}
+
         <button
           type="submit"
+          disabled={loading}
           className="min-w-[150px] h-[60px] mt-[30px] text-black font-semibold bg-white rounded-full text-[19px]"
         >
-          Sign Up
+          {loading ? "Loading..." : "Sign Up"}
         </button>
 
         <p
