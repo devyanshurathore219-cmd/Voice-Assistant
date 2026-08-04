@@ -40,7 +40,11 @@ function SignIn() {
       console.log(error);
       setUserData(null);
       setLoading(false);
-      setErr(error?.response?.data?.message || "Something went wrong");
+      setErr(
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong"
+      );
     }
   };
 

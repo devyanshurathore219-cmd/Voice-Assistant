@@ -8,9 +8,15 @@ import axios from "axios";
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
-  const serverUrl = "http://localhost:8000";
+  const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
 
+  // User Data
   const [userData, setUserData] = useState(null);
+
+  // Assistant Image States
+  const [frontendImage, setFrontendImage] = useState(null);
+  const [backendImage, setBackendImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // Get Current Logged In User
   const handleCurrentUser = async () => {
@@ -35,8 +41,19 @@ function UserContext({ children }) {
 
   const value = {
     serverUrl,
+
     userData,
     setUserData,
+
+    backendImage,
+    setBackendImage,
+
+    frontendImage,
+    setFrontendImage,
+
+    selectedImage,
+    setSelectedImage,
+
     handleCurrentUser,
   };
 
