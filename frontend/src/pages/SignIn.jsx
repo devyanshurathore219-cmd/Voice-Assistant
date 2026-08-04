@@ -7,7 +7,7 @@ import axios from "axios";
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
-  const { serverUrl } = useContext(userDataContext);
+  const { serverUrl, userData, setUserData } = useContext(userDataContext);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -30,15 +30,15 @@ function SignIn() {
         },
         {
           withCredentials: true,
-        }
+        },
       );
 
-      console.log(result);
+      setUserData(result.data);
 
       setLoading(false);
     } catch (error) {
       console.log(error);
-
+      setUserData(null);
       setLoading(false);
       setErr(error?.response?.data?.message || "Something went wrong");
     }

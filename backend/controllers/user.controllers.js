@@ -1,10 +1,10 @@
-import User from "../models/user.model.js";
+import User from "../models/user.models.js";
 
 export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.userId;
 
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
       return res.status(400).json({
@@ -12,7 +12,9 @@ export const getCurrentUser = async (req, res) => {
       });
     }
 
-    return res.status(200).json(user);
+    const { password, ...userData } = user;
+
+    return res.status(200).json(userData);
   } catch (error) {
     console.log(error);
 

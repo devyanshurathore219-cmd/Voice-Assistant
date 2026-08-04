@@ -7,7 +7,7 @@ import axios from "axios";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
-  const { serverUrl } = useContext(userDataContext);
+  const { serverUrl, userData, setUserData } = useContext(userDataContext);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -33,18 +33,17 @@ function SignUp() {
         },
         {
           withCredentials: true,
-        }
+        },
       );
 
-      console.log(result);
+      setUserData(result.data);
       setLoading(false);
     } catch (error) {
       console.log(error);
+      setUserData(null);
       setLoading(false);
 
-      setErr(
-        error?.response?.data?.message || "Something went wrong"
-      );
+      setErr(error?.response?.data?.message || "Something went wrong");
     }
   };
 
