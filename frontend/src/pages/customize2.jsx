@@ -22,9 +22,13 @@ function Customize2() {
   const navigate = useNavigate();
 
   const handleUpdateAssistant = async () => {
+    if (!userData) {
+      alert("You must be signed in to create an assistant.");
+      navigate("/signin");
+      return;
+    }
+    setLoading(true);
     try {
-      setLoading(true);
-
       const formData = new FormData();
 
       formData.append("assistantName", assistantName);
@@ -35,13 +39,9 @@ function Customize2() {
         formData.append("imageUrl", selectedImage);
       }
 
-      const result = await axios.post(
-        `${serverUrl}/api/user/update`,
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
+      const result = await axios.post("/api/user/update", formData, {
+        withCredentials: true,
+      });
 
       console.log(result.data);
 
@@ -49,10 +49,26 @@ function Customize2() {
 
       setLoading(false);
 
-      // Optional: navigate to home after update
-      // navigate("/");
+      // Navigate to home after successful update
+      navigate("/");
     } catch (error) {
-      console.log(error);
+      const resp = error.response;
+      console.error("updateAssistant error:", resp || error.message || error);
+      if (resp && resp.status === 401) {
+        alert("Session expired or user not found. Please sign in again.");
+        navigate("/signin");
+        setLoading(false);
+        return;
+      }
+
+      if (resp && resp.data) {
+        console.error("response.data:", resp.data);
+        alert(
+          `Update failed: ${resp.data.message || JSON.stringify(resp.data)}`,
+        );
+      } else {
+        alert(`Update failed: ${error.message || "Unknown error"}`);
+      }
       setLoading(false);
     }
   };

@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.routes.js";
+import geminiResponse from "./gemini.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,11 +30,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
-
 app.use("/api/user", userRouter);
 
-await connectDb();
-
 app.listen(port, () => {
+  connectDb();
   console.log("server started");
 });

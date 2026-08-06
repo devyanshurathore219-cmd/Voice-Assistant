@@ -58,9 +58,38 @@ const create = async (data) => {
   return UserModel.create(data);
 };
 
+const findById = async (id) => {
+  if (!isDatabaseConnected()) {
+    return memoryUsers.find((user) => user._id === id) || null;
+  }
+
+  return UserModel.findById(id);
+};
+
+const findByIdAndUpdate = async (id, update = {}, options = {}) => {
+  if (!isDatabaseConnected()) {
+    const idx = memoryUsers.findIndex((user) => user._id === id);
+    if (idx === -1) return null;
+
+    memoryUsers[idx] = {
+      ...memoryUsers[idx],
+      ...update,
+      updatedAt: new Date(),
+    };
+
+    return memoryUsers[idx];
+  }
+
+  return UserModel.findByIdAndUpdate(id, update, options);
+};
+
 const User = {
   findOne,
   create,
+  findById,
+  findByIdAndUpdate,
 };
+
+export { UserModel };
 
 export default User;

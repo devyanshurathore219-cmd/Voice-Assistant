@@ -1,6 +1,8 @@
 import React, { useContext, useRef } from "react";
 import Card from "../components/Card";
 import { RiImageAddLine } from "react-icons/ri";
+import { MdKeyboardBackspace } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.jpg";
@@ -11,7 +13,6 @@ import image6 from "../assets/image6.jpeg";
 import image7 from "../assets/image7.jpeg";
 
 import { userDataContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
 
 function Customize() {
   const {
@@ -22,8 +23,8 @@ function Customize() {
     selectedImage,
     setSelectedImage,
   } = useContext(userDataContext);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const inputImage = useRef();
 
   const handleImage = (e) => {
@@ -36,7 +37,12 @@ function Customize() {
   };
 
   return (
-    <div className="w-full h-screen bg-gradient-to-t from-black to-[#030353] flex justify-center items-center flex-col p-[20px]">
+    <div className="w-full h-screen bg-gradient-to-t from-black to-[#030353] flex justify-center items-center flex-col p-[20px] relative">
+      <MdKeyboardBackspace
+        className="absolute top-[30px] left-[30px] text-white cursor-pointer w-[25px] h-[25px]"
+        onClick={() => navigate("/")}
+      />
+
       <h1 className="text-white mb-[40px] text-[30px] text-center font-semibold">
         Select your <span className="text-blue-200">Assistant Image</span>
       </h1>
@@ -50,7 +56,6 @@ function Customize() {
         <Card image={image6} />
         <Card image={image7} />
 
-        {/* Upload Image Card */}
         <div
           className={`
             w-[70px] h-[140px]
@@ -102,23 +107,24 @@ function Customize() {
           onChange={handleImage}
         />
       </div>
+
       {selectedImage && (
         <button
           className="
-          min-w-[150px]
-          h-[60px]
-          mt-[30px]
-          text-black
-          font-semibold
-          bg-white
-          rounded-full
-          text-[19px]
-          hover:bg-blue-500
-          hover:text-white
-          transition-all
-          duration-300
-          cursor-pointer
-        "
+            min-w-[150px]
+            h-[60px]
+            mt-[30px]
+            text-black
+            font-semibold
+            bg-white
+            rounded-full
+            text-[19px]
+            hover:bg-blue-500
+            hover:text-white
+            transition-all
+            duration-300
+            cursor-pointer
+          "
           onClick={() => navigate("/customize2")}
         >
           Next

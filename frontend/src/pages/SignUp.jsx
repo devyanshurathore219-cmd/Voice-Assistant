@@ -25,7 +25,7 @@ function SignUp() {
 
     try {
       let result = await axios.post(
-        `${serverUrl}/api/auth/signup`,
+        "/api/auth/signup",
         {
           name,
           email,
