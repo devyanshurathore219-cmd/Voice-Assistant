@@ -1,5 +1,5 @@
-import User from "../models/user.model.js";
-import { uploadOnCloudinary } from "../config/cloudinary.js";
+import User from "../models/user.models.js";
+import uploadOnCloudinary from "../config/cloudinary.js";
 
 // ===============================
 // Get Current User
